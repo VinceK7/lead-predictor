@@ -61,6 +61,23 @@ const numberElements = {
 
 const getLocale = () => localeByLanguage[languageSelect.value] || "en-US";
 
+const formatFiniteNumber = (formatter, value) => {
+  if (!Number.isFinite(value)) {
+    throw new RangeError("NexusLead Pro cannot format a non-finite number.");
+  }
+  return formatter.format(value);
+};
+
+const formatCurrency = (formatter, value, currency) => {
+  if (!Number.isFinite(value)) {
+    throw new RangeError("NexusLead Pro cannot format a non-finite currency value.");
+  }
+  if (Math.abs(value) >= 1e15) {
+    return `${currency} ${value.toExponential(2)}`;
+  }
+  return formatter.format(value);
+};
+
 const setInvalid = (input, invalid) => {
   if (invalid) {
     input.setAttribute("aria-invalid", "true");
@@ -88,16 +105,22 @@ const updateCurrencySymbols = (locale, currency) => {
   requiredElement("average-order-value-symbol").textContent = symbol;
 };
 
-const formatPercent = (ratio) => `${Math.round(ratio)}%`;
+const formatPercent = (ratio) => {
+  if (!Number.isFinite(ratio)) {
+    throw new RangeError("NexusLead Pro cannot format a non-finite percentage.");
+  }
+  return `${Math.round(ratio)}%`;
+};
 
-const setProgress = (metric, count, ratio) => {
+const setProgress = (metric, count, ratio, numberFormatter) => {
+  if (!Number.isFinite(ratio)) {
+    throw new RangeError("NexusLead Pro cannot calculate a non-finite progress value.");
+  }
   const percentage = Math.max(0, Math.min(100, ratio));
   metric.progress.value = percentage;
   metric.progress.textContent = formatPercent(percentage);
   metric.progressLabel.textContent = formatPercent(percentage);
-  metric.value.textContent = new Intl.NumberFormat(getLocale(), {
-    maximumFractionDigits: 0,
-  }).format(count);
+  metric.value.textContent = formatFiniteNumber(numberFormatter, count);
 };
 
 const clearResults = () => {
@@ -118,6 +141,9 @@ const clearResults = () => {
 };
 
 const niceAxisMaximum = (maximumValue) => {
+  if (!Number.isFinite(maximumValue)) {
+    throw new RangeError("NexusLead Pro cannot scale a non-finite chart value.");
+  }
   if (maximumValue <= 0) {
     return 0;
   }
@@ -133,7 +159,7 @@ const renderMonthlyBreakdown = (totalRevenue, currencyFormatter) => {
   const weightTotal = months.reduce((sum, month) => sum + month.weight, 0);
   const monthlyRevenue = months.map((month) => ({
     ...month,
-    revenue: (totalRevenue * month.weight) / weightTotal,
+    revenue: totalRevenue * (month.weight / weightTotal),
   }));
   const axisMaximum = niceAxisMaximum(
     Math.max(...monthlyRevenue.map((month) => month.revenue)),
@@ -147,7 +173,11 @@ const renderMonthlyBreakdown = (totalRevenue, currencyFormatter) => {
 
   chartYAxisLabels.forEach((label, index) => {
     const tickValue = axisMaximum * ((chartYAxisLabels.length - index - 1) / (chartYAxisLabels.length - 1));
-    label.textContent = compactCurrencyFormatter.format(tickValue);
+    label.textContent = formatCurrency(
+      compactCurrencyFormatter,
+      tickValue,
+      currencySelect.value,
+    );
   });
 
   monthlyBars.replaceChildren();
@@ -167,7 +197,11 @@ const renderMonthlyBreakdown = (totalRevenue, currencyFormatter) => {
     if (month.revenue === 0) {
       bar.classList.add("is-empty");
     }
-    bar.title = `${month.name}: ${currencyFormatter.format(month.revenue)}`;
+    bar.title = `${month.name}: ${formatCurrency(
+      currencyFormatter,
+      month.revenue,
+      currencySelect.value,
+    )}`;
     barGroup.append(bar);
 
     const monthLabel = document.createElement("span");
@@ -179,7 +213,14 @@ const renderMonthlyBreakdown = (totalRevenue, currencyFormatter) => {
   });
 
   const summary = monthlyRevenue
-    .map((month) => `${month.name} ${currencyFormatter.format(month.revenue)}`)
+    .map(
+      (month) =>
+        `${month.name} ${formatCurrency(
+          currencyFormatter,
+          month.revenue,
+          currencySelect.value,
+        )}`,
+    )
     .join(", ");
   chartContainer.setAttribute("aria-label", `Six-month revenue breakdown: ${summary}.`);
 };
@@ -239,8 +280,11 @@ const updateDashboard = () => {
     return;
   }
 
+  // Divide revenue by average order value to estimate customers, rounding up any partial customer.
   const customers = Math.ceil(totalRevenue / averageOrderValue);
+  // Scale customers by 100 / lead response rate to find the required leads, rounding up.
   const leads = Math.ceil((customers * 100) / leadResponseRate);
+  // Scale leads by 100 / prospect response rate to find the required prospects, rounding up.
   const prospects = Math.ceil((leads * 100) / prospectResponseRate);
 
   if (![customers, leads, prospects].every(Number.isSafeInteger)) {
@@ -253,9 +297,22 @@ const updateDashboard = () => {
   calculatorError.textContent = "";
   calculatorError.hidden = true;
 
-  setProgress(numberElements.prospects, prospects, prospects > 0 ? 100 : 0);
-  setProgress(numberElements.leads, leads, prospects > 0 ? (leads / prospects) * 100 : 0);
-  setProgress(numberElements.customers, customers, leads > 0 ? (customers / leads) * 100 : 0);
+  const numberFormatter = new Intl.NumberFormat(locale, {
+    maximumFractionDigits: 0,
+  });
+  setProgress(numberElements.prospects, prospects, prospects > 0 ? 100 : 0, numberFormatter);
+  setProgress(
+    numberElements.leads,
+    leads,
+    prospects > 0 ? (leads / prospects) * 100 : 0,
+    numberFormatter,
+  );
+  setProgress(
+    numberElements.customers,
+    customers,
+    leads > 0 ? (customers / leads) * 100 : 0,
+    numberFormatter,
+  );
   renderMonthlyBreakdown(totalRevenue, currencyFormatter);
 };
 
