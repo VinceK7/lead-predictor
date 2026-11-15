@@ -63,7 +63,7 @@
           <div class="form-field">
             <label for="total-revenue">Total revenue</label>
             <div class="input-with-prefix">
-              <span aria-hidden="true">$</span>
+              <span id="total-revenue-symbol" aria-hidden="true">$</span>
               <input
                 id="total-revenue"
                 name="total-revenue"
@@ -78,7 +78,7 @@
           <div class="form-field">
             <label for="average-order-value">Average order value</label>
             <div class="input-with-prefix">
-              <span aria-hidden="true">$</span>
+              <span id="average-order-value-symbol" aria-hidden="true">$</span>
               <input
                 id="average-order-value"
                 name="average-order-value"
@@ -89,6 +89,7 @@
               />
             </div>
           </div>
+          <p class="form-error" id="calculator-error" role="alert" hidden></p>
         </form>
 
         <div class="sidebar__footer">
@@ -143,66 +144,22 @@
             aria-label="Monthly campaign breakdown chart from January through June"
           >
             <div class="chart-y-axis" aria-hidden="true">
-              <span>$20k</span>
-              <span>$15k</span>
-              <span>$10k</span>
-              <span>$5k</span>
-              <span>$0</span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
             </div>
             <div class="chart-plot">
               <div class="chart-grid" aria-hidden="true">
                 <span></span><span></span><span></span><span></span><span></span>
               </div>
-              <div class="chart-bars" aria-hidden="true">
-                <div class="chart-month">
-                  <div class="chart-bar-group">
-                    <span class="chart-bar chart-bar--primary" style="--bar-height: 42%"></span>
-                    <span class="chart-bar chart-bar--muted" style="--bar-height: 26%"></span>
-                  </div>
-                  <span class="chart-month__label">Jan</span>
-                </div>
-                <div class="chart-month">
-                  <div class="chart-bar-group">
-                    <span class="chart-bar chart-bar--primary" style="--bar-height: 54%"></span>
-                    <span class="chart-bar chart-bar--muted" style="--bar-height: 34%"></span>
-                  </div>
-                  <span class="chart-month__label">Feb</span>
-                </div>
-                <div class="chart-month">
-                  <div class="chart-bar-group">
-                    <span class="chart-bar chart-bar--primary" style="--bar-height: 48%"></span>
-                    <span class="chart-bar chart-bar--muted" style="--bar-height: 40%"></span>
-                  </div>
-                  <span class="chart-month__label">Mar</span>
-                </div>
-                <div class="chart-month">
-                  <div class="chart-bar-group">
-                    <span class="chart-bar chart-bar--primary" style="--bar-height: 70%"></span>
-                    <span class="chart-bar chart-bar--muted" style="--bar-height: 46%"></span>
-                  </div>
-                  <span class="chart-month__label">Apr</span>
-                </div>
-                <div class="chart-month">
-                  <div class="chart-bar-group">
-                    <span class="chart-bar chart-bar--primary" style="--bar-height: 64%"></span>
-                    <span class="chart-bar chart-bar--muted" style="--bar-height: 52%"></span>
-                  </div>
-                  <span class="chart-month__label">May</span>
-                </div>
-                <div class="chart-month">
-                  <div class="chart-bar-group">
-                    <span class="chart-bar chart-bar--primary" style="--bar-height: 88%"></span>
-                    <span class="chart-bar chart-bar--muted" style="--bar-height: 66%"></span>
-                  </div>
-                  <span class="chart-month__label">Jun</span>
-                </div>
-              </div>
+              <div class="chart-bars" id="monthlyBars" aria-hidden="true"></div>
             </div>
           </div>
 
           <div class="chart-legend" aria-label="Chart legend">
             <span><i class="legend-dot legend-dot--primary" aria-hidden="true"></i>Revenue</span>
-            <span><i class="legend-dot legend-dot--muted" aria-hidden="true"></i>Target</span>
           </div>
         </section>
 
@@ -224,12 +181,12 @@
               id="email-response-rate"
               name="email-response-rate"
               type="range"
-              min="0"
+              min="1"
               max="100"
               value="24"
             />
             <div class="slider-field__scale" aria-hidden="true">
-              <span>0%</span><span>100%</span>
+              <span>1%</span><span>100%</span>
             </div>
           </div>
 
@@ -242,12 +199,12 @@
               id="meeting-response-rate"
               name="meeting-response-rate"
               type="range"
-              min="0"
+              min="1"
               max="100"
               value="18"
             />
             <div class="slider-field__scale" aria-hidden="true">
-              <span>0%</span><span>100%</span>
+              <span>1%</span><span>100%</span>
             </div>
           </div>
         </section>
@@ -266,11 +223,11 @@
             <span class="metric-change">+12.8%</span>
           </div>
           <h3 id="prospects-title">Prospects</h3>
-          <p class="metric-value">2,480</p>
-          <progress class="metric-progress metric-progress--prospects" value="82" max="100">
-            82%
+          <p class="metric-value" id="prospects-value">696</p>
+          <progress class="metric-progress metric-progress--prospects" id="prospects-progress" value="100" max="100">
+            100%
           </progress>
-          <p class="metric-caption"><span>82%</span> of monthly target</p>
+          <p class="metric-caption"><span id="prospects-progress-label">100%</span> of pipeline volume</p>
         </section>
 
         <section class="metric-card" aria-labelledby="leads-title">
@@ -279,11 +236,11 @@
             <span class="metric-change">+8.4%</span>
           </div>
           <h3 id="leads-title">Leads</h3>
-          <p class="metric-value">684</p>
-          <progress class="metric-progress metric-progress--leads" value="64" max="100">
-            64%
+          <p class="metric-value" id="leads-value">167</p>
+          <progress class="metric-progress metric-progress--leads" id="leads-progress" value="24" max="100">
+            24%
           </progress>
-          <p class="metric-caption"><span>64%</span> of monthly target</p>
+          <p class="metric-caption"><span id="leads-progress-label">24%</span> of prospects</p>
         </section>
 
         <section class="metric-card" aria-labelledby="customers-title">
@@ -292,17 +249,17 @@
             <span class="metric-change">+5.2%</span>
           </div>
           <h3 id="customers-title">Customers</h3>
-          <p class="metric-value">126</p>
-          <progress class="metric-progress metric-progress--customers" value="47" max="100">
-            47%
+          <p class="metric-value" id="customers-value">30</p>
+          <progress class="metric-progress metric-progress--customers" id="customers-progress" value="18" max="100">
+            18%
           </progress>
-          <p class="metric-caption"><span>47%</span> of monthly target</p>
+          <p class="metric-caption"><span id="customers-progress-label">18%</span> of leads</p>
         </section>
 
         <section class="insight-card" aria-labelledby="insight-title">
           <span class="insight-card__icon" aria-hidden="true">✦</span>
           <h3 id="insight-title">Looking good!</h3>
-          <p>Your prospect volume is trending above your monthly target.</p>
+          <p>Your pipeline forecast updates as you adjust campaign inputs.</p>
         </section>
       </aside>
     </div>
