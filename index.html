@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Plan campaigns and forecast your lead pipeline with NexusLead Pro."
+    />
+    <meta name="theme-color" content="#f5f7fb" />
+    <title>NexusLead Pro — Campaign Forecast</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar sidebar--settings" aria-labelledby="settings-title">
+        <a class="brand" href="#" aria-label="NexusLead Pro home">
+          <span class="brand__mark" aria-hidden="true">N</span>
+          <span class="brand__name">NexusLead <span>Pro</span></span>
+        </a>
+
+        <div class="sidebar__heading">
+          <p class="eyebrow">Workspace</p>
+          <h2 id="settings-title">Campaign setup</h2>
+        </div>
+
+        <form class="settings-form">
+          <div class="form-field">
+            <label for="language">Language</label>
+            <select id="language" name="language">
+              <option value="en" selected>English</option>
+              <option value="es">Español</option>
+              <option value="fr">Français</option>
+              <option value="de">Deutsch</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="currency">Currency</label>
+            <select id="currency" name="currency">
+              <option value="USD" selected>USD — US Dollar</option>
+              <option value="EUR">EUR — Euro</option>
+              <option value="GBP">GBP — British Pound</option>
+              <option value="CAD">CAD — Canadian Dollar</option>
+            </select>
+          </div>
+
+          <fieldset class="form-field date-fields">
+            <legend>Campaign dates</legend>
+            <div class="date-fields__row">
+              <div>
+                <label for="start-date">Start date</label>
+                <input id="start-date" name="start-date" type="date" />
+              </div>
+              <div>
+                <label for="end-date">End date</label>
+                <input id="end-date" name="end-date" type="date" />
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="form-field">
+            <label for="total-revenue">Total revenue</label>
+            <div class="input-with-prefix">
+              <span aria-hidden="true">$</span>
+              <input
+                id="total-revenue"
+                name="total-revenue"
+                type="number"
+                min="0"
+                step="100"
+                value="15000"
+              />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="average-order-value">Average order value</label>
+            <div class="input-with-prefix">
+              <span aria-hidden="true">$</span>
+              <input
+                id="average-order-value"
+                name="average-order-value"
+                type="number"
+                min="0"
+                step="10"
+                value="500"
+              />
+            </div>
+          </div>
+        </form>
+
+        <div class="sidebar__footer">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>Forecast ready to update</span>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="breadcrumb">
+            <span>Workspace</span>
+            <span aria-hidden="true">/</span>
+            <strong>Forecast</strong>
+          </div>
+          <button class="profile-button" type="button" aria-label="Open account menu">
+            <span class="profile-button__avatar" aria-hidden="true">JD</span>
+            <span class="profile-button__name">Jordan Davis</span>
+            <span aria-hidden="true">⌄</span>
+          </button>
+        </header>
+
+        <section class="campaign-header" aria-labelledby="campaign-title">
+          <div>
+            <p class="eyebrow">Campaign overview</p>
+            <h1 id="campaign-title">Q3 Growth Campaign</h1>
+            <p class="campaign-header__subtitle">
+              Your pipeline forecast, shaped around the numbers that matter.
+            </p>
+          </div>
+          <button class="button button--primary" type="button">
+            <span aria-hidden="true">＋</span>
+            New campaign
+          </button>
+        </section>
+
+        <section class="card breakdown-card" aria-labelledby="breakdown-title">
+          <div class="card__header">
+            <div>
+              <p class="eyebrow">Campaign performance</p>
+              <h2 id="breakdown-title">6-month breakdown</h2>
+            </div>
+            <button class="button button--secondary" type="button">
+              Last 6 months
+              <span aria-hidden="true">⌄</span>
+            </button>
+          </div>
+
+          <div
+            class="chart-container"
+            role="img"
+            aria-label="Monthly campaign breakdown chart from January through June"
+          >
+            <div class="chart-y-axis" aria-hidden="true">
+              <span>$20k</span>
+              <span>$15k</span>
+              <span>$10k</span>
+              <span>$5k</span>
+              <span>$0</span>
+            </div>
+            <div class="chart-plot">
+              <div class="chart-grid" aria-hidden="true">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div class="chart-bars" aria-hidden="true">
+                <div class="chart-month">
+                  <div class="chart-bar-group">
+                    <span class="chart-bar chart-bar--primary" style="--bar-height: 42%"></span>
+                    <span class="chart-bar chart-bar--muted" style="--bar-height: 26%"></span>
+                  </div>
+                  <span class="chart-month__label">Jan</span>
+                </div>
+                <div class="chart-month">
+                  <div class="chart-bar-group">
+                    <span class="chart-bar chart-bar--primary" style="--bar-height: 54%"></span>
+                    <span class="chart-bar chart-bar--muted" style="--bar-height: 34%"></span>
+                  </div>
+                  <span class="chart-month__label">Feb</span>
+                </div>
+                <div class="chart-month">
+                  <div class="chart-bar-group">
+                    <span class="chart-bar chart-bar--primary" style="--bar-height: 48%"></span>
+                    <span class="chart-bar chart-bar--muted" style="--bar-height: 40%"></span>
+                  </div>
+                  <span class="chart-month__label">Mar</span>
+                </div>
+                <div class="chart-month">
+                  <div class="chart-bar-group">
+                    <span class="chart-bar chart-bar--primary" style="--bar-height: 70%"></span>
+                    <span class="chart-bar chart-bar--muted" style="--bar-height: 46%"></span>
+                  </div>
+                  <span class="chart-month__label">Apr</span>
+                </div>
+                <div class="chart-month">
+                  <div class="chart-bar-group">
+                    <span class="chart-bar chart-bar--primary" style="--bar-height: 64%"></span>
+                    <span class="chart-bar chart-bar--muted" style="--bar-height: 52%"></span>
+                  </div>
+                  <span class="chart-month__label">May</span>
+                </div>
+                <div class="chart-month">
+                  <div class="chart-bar-group">
+                    <span class="chart-bar chart-bar--primary" style="--bar-height: 88%"></span>
+                    <span class="chart-bar chart-bar--muted" style="--bar-height: 66%"></span>
+                  </div>
+                  <span class="chart-month__label">Jun</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-legend" aria-label="Chart legend">
+            <span><i class="legend-dot legend-dot--primary" aria-hidden="true"></i>Revenue</span>
+            <span><i class="legend-dot legend-dot--muted" aria-hidden="true"></i>Target</span>
+          </div>
+        </section>
+
+        <section class="card response-card" aria-labelledby="response-title">
+          <div class="card__header">
+            <div>
+              <p class="eyebrow">Fine-tune your forecast</p>
+              <h2 id="response-title">Response rates</h2>
+            </div>
+            <span class="info-badge" title="Adjust the rates used in your forecast">i</span>
+          </div>
+
+          <div class="slider-field">
+            <div class="slider-field__heading">
+              <label for="email-response-rate">Email response rate</label>
+              <output id="email-response-output" for="email-response-rate">24%</output>
+            </div>
+            <input
+              id="email-response-rate"
+              name="email-response-rate"
+              type="range"
+              min="0"
+              max="100"
+              value="24"
+            />
+            <div class="slider-field__scale" aria-hidden="true">
+              <span>0%</span><span>100%</span>
+            </div>
+          </div>
+
+          <div class="slider-field">
+            <div class="slider-field__heading">
+              <label for="meeting-response-rate">Meeting conversion rate</label>
+              <output id="meeting-response-output" for="meeting-response-rate">18%</output>
+            </div>
+            <input
+              id="meeting-response-rate"
+              name="meeting-response-rate"
+              type="range"
+              min="0"
+              max="100"
+              value="18"
+            />
+            <div class="slider-field__scale" aria-hidden="true">
+              <span>0%</span><span>100%</span>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <aside class="sidebar sidebar--metrics" aria-labelledby="metrics-title">
+        <div class="sidebar__heading">
+          <p class="eyebrow">At a glance</p>
+          <h2 id="metrics-title">Pipeline metrics</h2>
+          <p class="sidebar__description">Your projected campaign funnel</p>
+        </div>
+
+        <section class="metric-card" aria-labelledby="prospects-title">
+          <div class="metric-card__topline">
+            <span class="metric-icon metric-icon--prospects" aria-hidden="true">◎</span>
+            <span class="metric-change">+12.8%</span>
+          </div>
+          <h3 id="prospects-title">Prospects</h3>
+          <p class="metric-value">2,480</p>
+          <progress class="metric-progress metric-progress--prospects" value="82" max="100">
+            82%
+          </progress>
+          <p class="metric-caption"><span>82%</span> of monthly target</p>
+        </section>
+
+        <section class="metric-card" aria-labelledby="leads-title">
+          <div class="metric-card__topline">
+            <span class="metric-icon metric-icon--leads" aria-hidden="true">↗</span>
+            <span class="metric-change">+8.4%</span>
+          </div>
+          <h3 id="leads-title">Leads</h3>
+          <p class="metric-value">684</p>
+          <progress class="metric-progress metric-progress--leads" value="64" max="100">
+            64%
+          </progress>
+          <p class="metric-caption"><span>64%</span> of monthly target</p>
+        </section>
+
+        <section class="metric-card" aria-labelledby="customers-title">
+          <div class="metric-card__topline">
+            <span class="metric-icon metric-icon--customers" aria-hidden="true">✦</span>
+            <span class="metric-change">+5.2%</span>
+          </div>
+          <h3 id="customers-title">Customers</h3>
+          <p class="metric-value">126</p>
+          <progress class="metric-progress metric-progress--customers" value="47" max="100">
+            47%
+          </progress>
+          <p class="metric-caption"><span>47%</span> of monthly target</p>
+        </section>
+
+        <section class="insight-card" aria-labelledby="insight-title">
+          <span class="insight-card__icon" aria-hidden="true">✦</span>
+          <h3 id="insight-title">Looking good!</h3>
+          <p>Your prospect volume is trending above your monthly target.</p>
+        </section>
+      </aside>
+    </div>
+  </body>
+</html>
