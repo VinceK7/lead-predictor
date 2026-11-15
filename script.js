@@ -17,6 +17,7 @@ const meetingResponseRateInput = requiredElement("meeting-response-rate");
 const emailResponseOutput = requiredElement("email-response-output");
 const meetingResponseOutput = requiredElement("meeting-response-output");
 const calculatorError = requiredElement("calculator-error");
+const amountInputs = [totalRevenueInput, averageOrderValueInput];
 const monthlyBars = requiredElement("monthlyBars");
 const chartContainer = document.querySelector(".chart-container");
 const chartYAxisLabels = document.querySelectorAll(".chart-y-axis span");
@@ -59,7 +60,41 @@ const numberElements = {
   },
 };
 
+const lastValidAmounts = new Map(
+  amountInputs.map((input) => [input, input.value]),
+);
+
 const getLocale = () => localeByLanguage[languageSelect.value] || "en-US";
+
+const isValidAmount = (input) => {
+  const text = input.value.trim();
+  const amount = Number(text);
+
+  return (
+    text !== "" &&
+    Number.isFinite(amount) &&
+    amount >= 0 &&
+    (input !== averageOrderValueInput || amount > 0)
+  );
+};
+
+const handleAmountInput = (input) => {
+  if (isValidAmount(input)) {
+    lastValidAmounts.set(input, input.value);
+  }
+  updateDashboard();
+};
+
+const restoreInvalidAmount = (input) => {
+  if (!isValidAmount(input)) {
+    const lastValidAmount = lastValidAmounts.get(input);
+    if (lastValidAmount === undefined) {
+      throw new Error(`NexusLead Pro has no valid fallback for #${input.id}.`);
+    }
+    input.value = lastValidAmount;
+  }
+  updateDashboard();
+};
 
 const formatFiniteNumber = (formatter, value) => {
   if (!Number.isFinite(value)) {
@@ -255,10 +290,10 @@ const updateDashboard = () => {
   setInvalid(emailResponseRateInput, invalidProspectResponseRate);
 
   if (invalidRevenue) {
-    errors.push("Enter a total revenue of zero or more.");
+    errors.push("Total revenue must be entered as zero or a positive number.");
   }
   if (invalidAverageOrderValue) {
-    errors.push("Average order value must be greater than zero.");
+    errors.push("Average order value must be a positive number.");
   }
   if (invalidLeadResponseRate || invalidProspectResponseRate) {
     errors.push("Response rates must be between 1% and 100%.");
@@ -316,12 +351,14 @@ const updateDashboard = () => {
   renderMonthlyBreakdown(totalRevenue, currencyFormatter);
 };
 
-[
-  totalRevenueInput,
-  averageOrderValueInput,
-  emailResponseRateInput,
-  meetingResponseRateInput,
-].forEach((input) => input.addEventListener("input", updateDashboard));
+amountInputs.forEach((input) => {
+  input.addEventListener("input", () => handleAmountInput(input));
+  input.addEventListener("blur", () => restoreInvalidAmount(input));
+});
+
+[emailResponseRateInput, meetingResponseRateInput].forEach((input) => {
+  input.addEventListener("input", updateDashboard);
+});
 
 [languageSelect, currencySelect].forEach((select) => {
   select.addEventListener("change", updateDashboard);
